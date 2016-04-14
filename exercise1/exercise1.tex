@@ -1,0 +1,130 @@
+\input{../head.tex}
+
+\begin{document}
+
+\title{HA 1}
+\date{14. April 1016}
+
+\maketitle
+
+\section*{Aufgabe 1}
+
+\emph{zu zeigen:} ($\dagger$) Theorem aus Aufgabenstellung.
+
+\begin{itemize}
+	\item \emph{Induktionsanfang:} $n = 1$\\
+	$\implies T(n) = T(1) \le c$\\
+	Falls:
+	\begin{itemize}
+		\item \textbf{a < b:} $T(1) \le c < c \cdot \underbrace{\frac{b}{b - a}}_{> 1} \cdot 1$ \checkmark
+		\item \textbf{a = b:} $T(1) \le c = c \cdot 1 \cdot (\underbrace{\log_b{1}}_{= 0} + 1)$ \checkmark
+		\item \textbf{a > b:} $T(1) \le c < c \cdot \underbrace{\frac{b}{a - b}}_{> 1} \cdot \underbrace{1^\log_b{a}}_{= 1$ \checkmark
+	\end{itemize}
+	\item \emph{Induktionsvoraussetzung:} ($\dagger$) gilt für ein beliebiges aber festes $n$.
+	\item \emph{Induktionsschritt:} $n \to n \cdot b$ (nächste Potenz von $b$)\\
+	per Definition:
+	\begin{equation*}
+		T(nb) \le a \cdot T(\frac{nb}{b}) + c \cdot nb = a \cdot T(n) + c \cdot nb
+	\end{equation*}
+	Falls:
+	\begin{itemize}
+		\item \textbf{a < b:}
+		\begin{equation*}
+			\begin{align}
+				T(nb) &\le a \cdot T(n) + c \cdot nb\\
+				&\underset{\mathrm{I.V.}}{\le} a \cdot (c \cdot \frac{b}{b - a} \cdot n) + c \cdot nb\\
+				&= (c \cdot nb \cdot \frac{a}{b - a}) + c \cdot nb = c \cdot nb \cdot (\frac{a}{b - a} + 1)\\
+				&= c \cdot \frac{b}{b - a} \cdot nb
+			\end{align}
+		\end{equation*}
+		\item \textbf{a = b:}
+		\begin{equation*}
+			\begin{align}
+				T(nb) &\le a \cdot T(n) + c \cdot nb\\
+				&\underset{\mathrm{I.V.}}{\le} a \cdot (cn \cdot (\log_{b}{n} + 1)) + c \cdot nb\\
+				&\underset{\mathrm{a = b}}{=} b \cdot cn \cdot (\log_b{n} + 1) + c \cdot nb = c \cdot nb \cdot (\log_b{(nb)} + 1)
+			\end{align}
+		\end{equation*}
+		\item \textbf{a > b:}
+		\begin{equation*}
+			\begin{align}
+				T(nb) &\le a \cdot T(n) + c \cdot nb\\
+				&\underset{\mathrm{I.V.}}{\le} a \cdot (c \cdot \frac{a}{a - b} \cdot n^{\log_b{a}}) + c \cdot nb\\
+				&= ac \cdot \frac{a}{a - b} \cdot n^{\log_b{a}} + c \cdot nb\\
+				&= b^{\log_b{a}}c \cdot \frac{a}{a - b} \cdot n^{\log_b{a}} + c \cdot nb\\
+				&= c \cdot \frac{a}{a - b} \cdot (nb)^{\log_b{a}} + c \cdot nb\\
+			\end{align}
+		\end{equation*}
+	\end{itemize}
+\end{itemize}
+
+\qed
+
+\section*{Aufgabe 2}
+
+\subsection{Funktionen ordnen}
+
+\begin{equation*}
+	\mathcal{O}(42) \underset{\mathrm{\circled{1}}}{\subset}
+	\mathcal{O}(n^{10}) \underset{\mathrm{\circled{2}}}{\subset}
+	\mathcal{O}(\sqrt{n}^{\log{n}}) \underset{\mathrm{\circled{3}}}{\subset}
+	\mathcal{O}(5^{\frac{n}{2}}) \underset{\mathrm{\circled{4}}}{\subset}
+	\mathcal{O}(3^{3n\log{n}})
+\end{equation*}
+
+\emph{Korrektheit:}
+
+\begin{enumerate}[label=\protect\circled{\arabic*}]
+	\item $\forall n > \sqrt[10]{42}:\ 42 < n^{10}$ \checkmark
+	\item $\forall n > 2^{20}:\ 10 < \frac{1}{2}\log{n} \implies n^{10} < n^{\frac{1}{2}\log{n}} = \sqrt{n}^{\log{n}}$ \checkmark
+	\item \begin{equation*}
+			\begin{align}
+				n \to \infty:\quad
+				&\frac{1}{2}(\log{n})^2 < n\log{\sqrt{5}}\\
+				\implies &\frac{1}{2}\log{n} < n \cdot \frac{\log{\sqrt{5}}}{\log{n}} = n \cdot \log_n{\sqrt{5}}\\
+				\implies &n^{\frac{1}{2}\log{n}} < n^{n \cdot \log_n{\sqrt{5}}}\\
+				\implies &\sqrt{n}^{\log{n}} < 5^{\frac{n}{2}}\quad\checkmark
+			\end{align}
+		\end{equation*}
+	\item \begin{equation*}
+		\begin{align}
+			n \to \infty:\quad
+			&\frac{1}{2} \cdot n < \log_{5}{(9)} \cdot n \log{n}\\
+			\implies &5^{\frac{n}{2}} < 5^{\log_{5}{(9)} \cdot n \log{n}}\\
+			\implies &5^{\frac{n}{2}} < 9^{n \log{n}} = 3^{3n\log{n}}\quad\checkmark
+		\end{align}
+	\end{equation*}
+\end{enumerate}
+
+\subsection{Laufzeiteigenschaften}
+
+\begin{enumerate}
+	\item Korrekt, denn: \begin{equation*}
+		\begin{align}
+			f(n) \in \Omega(g(n)) \implies &\exists c_0 > 0, n_0 > 0: \forall n \ge n_0:\ c_0 g(n) \le f(n)\\
+			\implies &\exists \underbrace{c_1 > 0}_{\text{z. B.}\ c_1 = c_0^{-1}}, n_0 > 0: \forall n \ge n_0:\ g(n) \le c_1 f(n)\\
+			\text{da}\ f(n) \in \mathbb{N}: f(n) \le f(n)^2 \implies &\exists c_1 > 0, n_0 > 0: \forall n \ge n_0:\ g(n) \le c_1 f(n)^2\\
+			\implies &g(n) \in \mathcal{O}(f(n)^2)\quad\checkmark
+		\end{align}
+	\end{equation*}
+	\item Falsch, denn:
+		\begin{equation*}
+			\begin{align*}
+				\text{sei} f(n) &= n, &g(n) &= \log_2{n} &\implies f(n) \in \Omega(g(n))\\
+				2^{f(n)} &= 2^n &2^{g(n)} &= 2^{log_2{n}} = n
+			\end{align*}
+		\end{equation*}
+		\begin{equation*}
+			\text{Angenommen}\ 2^{f(n)} \in \mathcal{O}(2^{g(n)}) \implies 2^n \in \mathcal{O}(n)\quad\text{\Lightning\ falsch}
+		\end{equation*}
+
+	\item Falsch, denn:
+		\begin{equation*}
+			\begin{align*}
+				\text{sei} f(n) = n,\ g(n) = 1,\ h(n) = n &\implies f(n) \in \Omega(g(n))\\
+				\text{Angenommen}\ f(n) \cdot h(n) \in \mathcal{O}(g(n) \cdot h(n)) &\implies n^2 \in \mathcal{O}(n)\quad\text{\Lightning\ falsch}
+			\end{align*}
+		\end{equation*}
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,72 @@
+\documentclass[12pt,a4paper,bibliography=totocnumbered,listof=totocnumbered]{scrartcl}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{alltt}
+\usepackage{upquote}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage[right]{eurosym}
+\usepackage[printonlyused]{acronym}
+\usepackage{lmodern}
+\usepackage{blindtext}
+\usepackage{soul,xcolor}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{syntax}
+\usepackage[all,defaultlines=4]{nowidow}
+\usepackage{tikz}
+\usepackage{marvosym}
+
+\lstset{basicstyle=\footnotesize, captionpos=b, breaklines=true, showstringspaces=false, tabsize=2, frame=lines, numbers=left, numberstyle=\tiny, xleftmargin=2em, framexleftmargin=2em, escapechar=@}
+
+\lstset{literate=%
+  {Ö}{{\"O}}1
+  {Ä}{{\"A}}1
+  {Ü}{{\"U}}1
+  {ß}{{\ss}}2
+  {ü}{{\"u}}1
+  {ä}{{\"a}}1
+  {ö}{{\"o}}1
+}
+
+\makeatletter
+\def\l@lstlisting#1#2{\@dottedtocline{1}{0em}{1em}{\hspace{1,5em} Lst. #1}{#2}}
+\makeatother
+
+\geometry{a4paper, top=27mm, left=30mm, right=20mm, bottom=35mm, headsep=10mm, footskip=12mm}
+
+\def\code#1{\texttt{#1}}
+
+\sethlcolor{yellow}
+
+\newcommand*\circled[1]{\tikz[baseline= (char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\renewcommand{\qed}{\hfill\blacksquare}
+
+\renewcommand{\sfdefault}{ppl}
+
+\renewcommand{\thesubsection}{\alph{subsection}}
+\renewcommand*\labelitemi{\blacktriangleright}
+
+% \renewcommand{\syntleft}{\normalfont\itshape}
+\renewcommand{\syntright}{}
+
+\makeatletter
+\renewcommand\maketitle{
+   \begin{center}
+     {\LARGE\bfseries Algorithmenentwurf \@title\par\vspace{0.5em}}
+     {\scshape\@author\break\@date}
+   \end{center}
+}
+\makeatother
+
+\author{Lukas Brandt: 7011823, Clemens Damke: 7011488, Lukas Giesel: 7011495}
