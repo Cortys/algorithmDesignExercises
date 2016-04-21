@@ -24,6 +24,10 @@
 \usepackage[all,defaultlines=4]{nowidow}
 \usepackage{tikz}
 \usepackage{marvosym}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
 
 \lstset{basicstyle=\footnotesize, captionpos=b, breaklines=true, showstringspaces=false, tabsize=2, frame=lines, numbers=left, numberstyle=\tiny, xleftmargin=2em, framexleftmargin=2em, escapechar=@}
 
@@ -61,6 +65,11 @@
 \renewcommand{\syntright}{}
 
 \makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+
 \renewcommand\maketitle{
    \begin{center}
      {\LARGE\bfseries Algorithmenentwurf \@title\par\vspace{0.5em}}

@@ -1,0 +1,121 @@
+\input{../head.tex}
+
+\begin{document}
+
+\title{HA 2}
+\date{21. April 1016}
+
+\maketitle
+
+\section*{Aufgabe 3}
+
+\subsection{Beweis}
+
+\emph{zu zeigen:} ($\dagger$) Gleichung aus der Aufgabenstellung.
+
+\begin{itemize}
+	\item \emph{Falls:} $k = 1 \implies n = 2$
+		\begin{equation*}
+			\begin{aligned}
+				A =& \begin{bmatrix}
+					a_1_1 & a_1_2 \\
+					a_2_1 & a_2_2
+				\end{bmatrix}\ B = \begin{bmatrix}
+					b_1_1 & b_1_2 \\
+					b_2_1 & b_2_2
+				\end{bmatrix} \\
+				C = A \cdot B =& \begin{bmatrix}
+					c_1_1 = a_1_1 \cdot b_1_1 + a_1_2 \cdot b_2_1 & c_1_2 = a_1_1 \cdot b_1_2 + a_1_2 \cdot b_2_2\\
+					c_2_1 = a_2_1 \cdot b_1_1 + a_2_2 \cdot b_2_1 & c_2_2 = a_2_1 \cdot b_1_2 + a_2_2 \cdot b_2_2
+				\end{bmatrix} \\
+				\implies& \text{($\dagger$) für $k = 1$, wenn man $a_i_j, b_i_j, c_i_j$ als $(1 \times 1)$-Matrizen interpretiert.}
+			\end{aligned}
+		\end{equation*}
+	\item \emph{Falls:} $k > 1 \implies n = 2^k$
+	\begin{equation*}
+		A \cdot B = C = \begin{bmatrix}
+			C_1_1 & C_1_2 \\
+			C_2_1 & C_2_2
+		\end{bmatrix} = \begin{bmatrix}[ccc|ccc]
+			c_1_1 & \cdots & c_1_{\frac{n}{2}} & c_1_{\frac{n}{2} + 1} & \cdots & c_1_n \\
+			\vdots & \ddots & \vdots & \vdots & \ddots & \vdots \\
+			c_{\frac{n}{2}}_1 & \cdots & c_{\frac{n}{2}}_{\frac{n}{2}} & c_{\frac{n}{2}}_{\frac{n}{2} + 1} & \cdots & c_{\frac{n}{2}}_n \\
+			\cmidrule(lr){1-6}
+			c_{\frac{n}{2} + 1}_1 & \cdots & c_{\frac{n}{2} + 1}_{\frac{n}{2}} & c_{\frac{n}{2} + 1}_{\frac{n}{2} + 1} & \cdots & c_{\frac{n}{2} + 1}_n \\
+			\vdots & \ddots & \vdots & \vdots & \ddots & \vdots \\
+			c_n_1 & \cdots & c_n_{\frac{n}{2}} & c_n_{\frac{n}{2} + 1} & \cdots & c_n_n
+		\end{bmatrix}
+	\end{equation*}
+	\begin{equation*}
+		\begin{aligned}
+			\forall i, j \in \{1, \ldots, n\}:\ c_i_j
+			= &\sum_{m = 1}^{n} a_i_m \cdot b_m_j
+			= \sum_{m = 1}^{\frac{n}{2}} a_i_m \cdot b_m_j
+			+ \sum_{m = \frac{n}{2} + 1}^{n} a_i_m \cdot b_m_j \\
+			= &\begin{cases}
+				(A_1_1 \cdot B_1_1)_i_j + (A_1_2 \cdot B_2_1)_i_j & i, j \le \frac{n}{2}\ (C_1_1) \\
+				(A_1_1 \cdot B_1_2)_i_{, j - \frac{n}{2}} + (A_1_2 \cdot B_2_2)_i_{, j - \frac{n}{2}} & i \le \frac{n}{2}, j > \frac{n}{2}\ (C_1_2) \\
+				(A_2_1 \cdot B_1_1)_{i - \frac{n}{2}, }_j + (A_2_2 \cdot B_2_1)_{i - \frac{n}{2}, }_j & i > \frac{n}{2}, j \le \frac{n}{2}\ (C_2_1) \\
+				(A_2_1 \cdot B_1_2)_{i  - \frac{n}{2}, }_{j - \frac{n}{2}} + (A_2_2 \cdot B_2_2)_{i  - \frac{n}{2}, }_{j - \frac{n}{2}} & i, j > \frac{n}{2}\ (C_2_2)
+			\end{cases} \\
+			= &\begin{cases}
+				(A_1_1 \cdot B_1_1 + A_1_2 \cdot B_2_1)_i_j & i, j \le \frac{n}{2}\ (C_1_1) \\
+				(A_1_1 \cdot B_1_2 + A_1_2 \cdot B_2_2)_i_{, j - \frac{n}{2}} & i \le \frac{n}{2}, j > \frac{n}{2}\ (C_1_2) \\
+				(A_2_1 \cdot B_1_1 + A_2_2 \cdot B_2_1)_{i - \frac{n}{2}, }_j & i > \frac{n}{2}, j \le \frac{n}{2}\ (C_2_1) \\
+				(A_2_1 \cdot B_1_2 + A_2_2 \cdot B_2_2)_{i  - \frac{n}{2}, }_{j - \frac{n}{2}} & i, j > \frac{n}{2}\ (C_2_2)
+			\end{cases} \\
+			\implies & \text{($\dagger$), da die vier Fälle jeweils die Einträge genau} \\
+			& \text{einer Submatrix $C_i_j$ von $C$ beschreiben.}
+			\end{aligned}
+	\end{equation*}
+	\qed
+\end{itemize}
+
+Es werden pro Submatrix von $C$ zwei Multiplikationen und eine Addition benötigt. Zur Multiplikation zweier Matrizen müssen vier Submatrizen berechnet und anschließend zusammengefügt werden. Insgesamt werden also 8 Multiplikationen und 4 Additionen benötigt.
+
+\subsection{Algorithmus}
+
+\begin{algorithm}
+	\caption{Matrizenmultiplikation}
+	\begin{algorithmic}[1]
+		\Require $\exists k \in \mathbb{N}_0, n := 2^k: A = \begin{bmatrix} a_1_1 & \cdots & a_1_n \\ \vdots & \ddots & \vdots \\ a_n_1 & \cdots & a_n_n \end{bmatrix} \land B = \begin{bmatrix} b_1_1 & \cdots & b_1_n \\ \vdots & \ddots & \vdots \\ b_n_1 & \cdots & b_n_n \end{bmatrix}$
+		\Statex
+		\Function{M-Multiply}{$A$, $B$}
+			\If{$n = 1$}
+				\State \Return $a_1_1 \cdot b_1_1$ \Comment $\mathcal{O}(1)$
+			\EndIf
+			\Statex
+			\State $A_1_1, A_1_2, A_2_1, A_2_2 \gets (\frac{n}{2} \times \frac{n}{2})\text{-Submatrizen von A}$ \Comment $\mathcal{O}(n^2)$
+			\State $B_1_1, B_1_2, B_2_1, B_2_2 \gets (\frac{n}{2} \times \frac{n}{2})\text{-Submatrizen von B}$ \Comment $\mathcal{O}(n^2)$
+			\Statex
+			\ForAll{$i, j \in \{1, 2\}$}
+				\State $T_1 \gets \Call{M-Multiply}{A_i_1, B_1_j}$ \Comment 8 Aufrufe pro \Call{M-Multiply}{}-Call.
+				\State $T_2 \gets \Call{M-Multiply}{A_i_2, B_2_j}$ \Comment 8 Aufrufe pro \Call{M-Multiply}{}-Call.
+				\State $C_i_j \gets \Call{M-Add}{T_1, T_2}$ \Comment $\mathcal{O}(n^2)$
+			\EndFor
+			\Statex
+			\State \Return $\begin{bmatrix}
+				C_1_1 & C_1_2 \\
+				C_2_1 & C_2_2
+			\end{bmatrix}$ \Comment $\mathcal{O}(n^2)$
+		\EndFunction
+		\Statex
+		\Function{M-Add}{$A$, $B$}
+			\ForAll{$i, j \in \{1, \ldots, n\}$}
+				\State $c_i_j \gets a_i_j + b_i_j$
+			\EndFor
+			\Statex
+			\State \Return $\begin{bmatrix} c_1_1 & \cdots & c_1_n \\ \vdots & \ddots & \vdots \\ c_n_1 & \cdots & c_n_n \end{bmatrix}$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+\textbf{Laufzeit:}
+\begin{equation*}
+	\begin{align}
+		T(n) &= 8c \cdot T(\frac{n}{2}) + c \cdot n^2 \\
+		\underset{\mathrm{Mastertheorem}\ a > b}{\implies} T(n) &\le \frac{8}{8 - 2}c \cdot n^{\log_2{8}} = \frac{4}{3}c \cdot n^3 = \mathcal{O}(n^3)
+	\end{align}
+\end{equation*}
+
+\end{document}
