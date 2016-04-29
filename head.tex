@@ -51,10 +51,12 @@
 
 \sethlcolor{yellow}
 
+\newcommand{\hlc}[2][yellow]{\colorbox{#1}{$\displaystyle #2$}}
+
 \newcommand*\circled[1]{\tikz[baseline= (char.base)]{
             \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
 
-\renewcommand{\qed}{\hfill\blacksquare}
+\newcommand{\qed}{\hfill\blacksquare}
 
 \renewcommand{\sfdefault}{ppl}
 
