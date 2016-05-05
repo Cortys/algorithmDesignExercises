@@ -18,7 +18,7 @@
 	\text{Gewichte}\ G :=&\ (g_1, \dots, g_n),\ g_i \in \mathbb{R}_{> 0}\\
 	\text{Werte}\ W :=&\ (w_1, \dots, w_n),\ w_i \in \mathbb{R}_{> 0}\\
 	r_i :=&\ \frac{w_i}{g_i}\\
-	\intertext{Seien $G$ und $W$ so sortiert, dass gilt $\forall i < j: r_i \le r_j$.}
+	\intertext{Seien $G$ und $W$ so sortiert, dass gilt $\forall i < j: r_i < r_j$.\\Falls $\exists\ i \neq j: r_i = r_j$, können $i$ und $j$ durch einen Gegenstand $k$ mit Wert $w_k = w_i + w_j$ und Gewicht $g_k = g_i + g_j$ ersetzt werden, da die Anteile von $i$ und $j$ an $k$ in der Lösung keine Rolle spielen.}
 	\text{Lösung}\ l :=&\ (l_1, \dots, l_n),\ l_i \in [0, 1],\ \sum g_i \cdot l_i \le g\\
 	w(l) :=&\ \sum_{i = 1}^{n} w_i \cdot l_i
 \end{align*}
@@ -33,31 +33,27 @@
 	\shortintertext{Falls $l_i > l'_i$:}
 	\implies&\ \exists j: l_j < l'_j,\ \text{da sonst $w(l) > w(l')$.}\\
 	\implies&\ j > i,\ \text{da bei $i$ der erste Unterschied zwischen $l$ und $l'$ ist.}\\
-	\implies&\ r_i \ge r_j
-	%
-	\shortintertext{Falls $r_i = r_j$:}
-	&\text{Wähle andere $i, j$ mit $i < j \land l_i > l'_i \land l_j < l'_j \land r_i > r_j$.}\\
-	&\text{Falls kein solches Paar existiert:}\\
-	&\forall l_i \neq l'_j: r_i = r_j \implies w(l) = w(l')\ \text{\Lightning}
-	%
-	\shortintertext{Falls $r_i > r_j$:}
+	\implies&\ r_i > r_j
+	\shortintertext{Sei:}
 	l'' :=&\ (l''_1, \dots l''_n) = (l'_1, \dots, l'_{i-1},\ x\ , l'_{i+1}, \dots, l'_{j-1},\ y\ , l'_{j+1}, l'_n)\\
-	x :=&\ \min\{1,\ l'_{i} + \frac{g_j \cdot l'_j}{g_i}\},\ y :=\ l'_j - \frac{(x-l'_i) \cdot g_i}{g_j}\\
-	%
+	x :=&\ \min\{1,\ l'_{i} + \frac{g_j \cdot l'_j}{g_i}\},\ y :=\ l'_j - \frac{(x-l'_i) \cdot g_i}{g_j}\displaybreak[0]\\
 	\implies&\ w(l'') = w(l') + w_i \cdot (x - l'_i) + w_j \cdot (y - l'_j)\\
 	\implies&\ w(l'') = w(l') + w_i \cdot (x - l'_i) - w_j \cdot \frac{(x-l'_i) \cdot g_i}{g_j}\\
 	\implies&\ w(l'') = w(l') + r_i \cdot g_i \cdot (x - l'_i) - r_j \cdot (x-l'_i) \cdot g_i\\
 	\implies&\ w(l'') = w(l') + \underbrace{(r_i - r_j)}_{> 0} \cdot \underbrace{g_i}_{> 0} \cdot \underbrace{(x - l'_i)}_{> 0}\\
 	\implies&\ w(l'') > w(l') \implies \text{$l'$ nicht optimal. \Lightning}
 	%%
-	\intertext{\emph{Bleibt z.\ z.} $l''$ ist valide Lösung: $\sum g_i \cdot l''_i = g \Leftrightarrow x \cdot g_i + y \cdot g_j = l'_i \cdot g_i + l'_j \cdot g_j$.}
+	\intertext{\emph{Bleibt z.\ z.} $l''$ ist valide Lösung:}
+	\shortintertext{\mathrm{\circled{1}} $\sum g_i \cdot l''_i = g \Leftrightarrow x \cdot g_i + y \cdot g_j = l'_i \cdot g_i + l'_j \cdot g_j$}
 	\shortintertext{Falls $x = 1$:}
-	x \cdot g_i + y \cdot g_j =&\ g_i + (l'_j - \frac{(1 - l'_i) \cdot g_i}{g_j}) \cdot g_j = l'_i \cdot g_i + l'_j \cdot g_j
+	x \cdot g_i + y \cdot g_j =&\ g_i + (l'_j - \frac{(1 - l'_i) \cdot g_i}{g_j}) \cdot g_j = l'_i \cdot g_i + l'_j \cdot g_j\ \checkmark
 	\shortintertext{Falls $x \neq 1$:}
 	x \cdot g_i + y \cdot g_j =&\ (l'_{i} + \frac{g_j \cdot l'_j}{g_i}) \cdot g_i + (l'_j - \frac{((l'_{i} + \frac{g_j \cdot l'_j}{g_i})-l'_i) \cdot g_i}{g_j}) \cdot g_j\\
 	=&\ l'_i \cdot g_i + l'_j \cdot g_j + l'_j \cdot g_j - (l'_{i} + \frac{g_j \cdot l'_j}{g_i}) \cdot g_i + l'_i \cdot g_i\\
 	=&\ 2 \cdot l'_i \cdot g_i + 2 \cdot l'_j \cdot g_j - l'_i \cdot g_i - l'_j \cdot g_j\\
-	=&\ l'_i \cdot g_i + l'_j \cdot g_j
+	=&\ l'_i \cdot g_i + l'_j \cdot g_j\ \checkmark
+	\shortintertext{\mathrm{\circled{2}} $x \in [l'_i, 1] \subseteq [0, 1]$ (offensichtlich gemäß Definition), $y \in [0, l'_j] \subseteq [0, 1]$:}
+	\frac{(x-l'_i) \cdot g_i}{g_j} \le&\ \frac{(\frac{g_j \cdot l'_j}{g_i}) \cdot g_i}{g_j} = l'_j \implies y \ge 0 \implies y \in [0, l'_j]\ \checkmark
 \end{align*}
 \qed%
 
