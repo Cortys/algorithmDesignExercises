@@ -1,0 +1,79 @@
+\input{../head.tex}
+
+\begin{document}
+
+\title{HA 4}
+\date{5. Mai 2016}
+
+\maketitle
+
+\section*{Aufgabe 7}
+\label{sec:Aufgabe 7}
+
+\subsection{Beweis Optimalität}
+\label{sub:Beweis Optimalität}
+
+\begin{align*}
+	\text{Rucksackgröße}\ g \in&\ \mathbb{R}_{> 0}\\
+	\text{Gewichte}\ G :=&\ (g_1, \dots, g_n),\ g_i \in \mathbb{R}_{> 0}\\
+	\text{Werte}\ W :=&\ (w_1, \dots, w_n),\ w_i \in \mathbb{R}_{> 0}\\
+	r_i :=&\ \frac{w_i}{g_i}\\
+	\intertext{Seien $G$ und $W$ so sortiert, dass gilt $\forall i < j: r_i \le r_j$.}
+	\text{Lösung}\ l :=&\ (l_1, \dots, l_n),\ l_i \in [0, 1],\ \sum g_i \cdot l_i \le g\\
+	w(l) :=&\ \sum_{i = 1}^{n} w_i \cdot l_i
+\end{align*}
+
+\emph{z.\ z.} Der Greedy-Algorithmus aus der VL ermittelt ein optimales $l$ ($\neg \exists\ l': w(l) < w(l')$).\\
+
+\begin{align*}
+	\shortintertext{\emph{Angenommen:} $\exists\ l': w(l) < w(l')$}
+	\implies&\ \exists x: l_x \neq l'_x,\ i := \min{x}
+	\shortintertext{Falls $l_i < l'_i$:}
+	&\text{Gemäß Konstruktion ist $l_i$ bereits maximal ($1$ oder so groß, dass $w(l) = g$). \Lightning}
+	\shortintertext{Falls $l_i > l'_i$:}
+	\implies&\ \exists j: l_j < l'_j,\ \text{da sonst $w(l) > w(l')$.}\\
+	\implies&\ j > i,\ \text{da bei $i$ der erste Unterschied zwischen $l$ und $l'$ ist.}\\
+	\implies&\ r_i \ge r_j
+	%
+	\shortintertext{Falls $r_i = r_j$:}
+	&\text{Wähle andere $i, j$ mit $i < j \land l_i > l'_i \land l_j < l'_j \land r_i > r_j$.}\\
+	&\text{Falls kein solches Paar existiert:}\\
+	&\forall l_i \neq l'_j: r_i = r_j \implies w(l) = w(l')\ \text{\Lightning}
+	%
+	\shortintertext{Falls $r_i > r_j$:}
+	l'' :=&\ (l''_1, \dots l''_n) = (l'_1, \dots, l'_{i-1},\ x\ , l'_{i+1}, \dots, l'_{j-1},\ y\ , l'_{j+1}, l'_n)\\
+	x :=&\ \min\{1,\ l'_{i} + \frac{g_j \cdot l'_j}{g_i}\},\ y :=\ l'_j - \frac{(x-l'_i) \cdot g_i}{g_j}\\
+	%
+	\implies&\ w(l'') = w(l') + w_i \cdot (x - l'_i) + w_j \cdot (y - l'_j)\\
+	\implies&\ w(l'') = w(l') + w_i \cdot (x - l'_i) - w_j \cdot \frac{(x-l'_i) \cdot g_i}{g_j}\\
+	\implies&\ w(l'') = w(l') + r_i \cdot g_i \cdot (x - l'_i) - r_j \cdot (x-l'_i) \cdot g_i\\
+	\implies&\ w(l'') = w(l') + \underbrace{(r_i - r_j)}_{> 0} \cdot \underbrace{g_i}_{> 0} \cdot \underbrace{(x - l'_i)}_{> 0}\\
+	\implies&\ w(l'') > w(l') \implies \text{$l'$ nicht optimal. \Lightning}
+	%%
+	\intertext{\emph{Bleibt z.\ z.} $l''$ ist valide Lösung: $\sum g_i \cdot l''_i = g \Leftrightarrow x \cdot g_i + y \cdot g_j = l'_i \cdot g_i + l'_j \cdot g_j$.}
+	\shortintertext{Falls $x = 1$:}
+	x \cdot g_i + y \cdot g_j =&\ g_i + (l'_j - \frac{(1 - l'_i) \cdot g_i}{g_j}) \cdot g_j = l'_i \cdot g_i + l'_j \cdot g_j
+	\shortintertext{Falls $x \neq 1$:}
+	x \cdot g_i + y \cdot g_j =&\ (l'_{i} + \frac{g_j \cdot l'_j}{g_i}) \cdot g_i + (l'_j - \frac{((l'_{i} + \frac{g_j \cdot l'_j}{g_i})-l'_i) \cdot g_i}{g_j}) \cdot g_j\\
+	=&\ l'_i \cdot g_i + l'_j \cdot g_j + l'_j \cdot g_j - (l'_{i} + \frac{g_j \cdot l'_j}{g_i}) \cdot g_i + l'_i \cdot g_i\\
+	=&\ 2 \cdot l'_i \cdot g_i + 2 \cdot l'_j \cdot g_j - l'_i \cdot g_i - l'_j \cdot g_j\\
+	=&\ l'_i \cdot g_i + l'_j \cdot g_j
+\end{align*}
+\qed%
+
+\subsection{Beweis 0–1-Rucksackproblem Ungeeignetheit}
+\label{sub:Beweis 0–1-Rucksackproblem Ungeeignetheit}
+
+\begin{align*}
+	\alpha >&\ 1\\
+	g_{\alpha} :=&\ \alpha + 1\\
+	G_{\alpha} :=&\ (1, \alpha + 1)\\
+	W_{\alpha} :=&\ (1, \alpha)\\
+	r_1 = 1,&\ r_2 = \frac{\alpha}{\alpha + 1}
+	\shortintertext{Greedy wird immer die Lösung $l_g = (1, 0)$ mit $w(l_g) = 1$ wählen, da $\forall \alpha: r_1 > r_2$.}
+	\shortintertext{Optimal wäre allerdings $l_o = (0, 1)$ mit $w(l_o) = \alpha$.}
+	\implies \frac{w(l_g)}{w(l_o)} = \frac{1}{\alpha} \implies&\ \text{Greedy $\alpha$-mal schlechter, als das Optimum.}
+\end{align*}
+\qed%
+
+\end{document}
