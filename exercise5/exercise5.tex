@@ -1,0 +1,87 @@
+\input{../head.tex}
+
+\begin{document}
+
+\title{HA 5}
+\date{19. Mai 2016}
+
+\maketitle
+
+\section*{Aufgabe 9}
+\label{sec:Aufgabe 9}
+
+\subsection{Algorithmus}
+\label{sub:Algorithmus}
+
+\begin{algorithm}
+	\caption{Maximales bipartites Matching}
+	\begin{algorithmic}[1]
+		\Require{$(L \cup R, E,w)$ ist bipartiter Graph mit linker Seite $L$, rechter Seite $R$ und Gewichtsfunktion $w: L \to \mathbb{R}$.}
+		\Statex\
+		\Function{MaxBipartiteMatching}{$L, R, E, w$}
+			\State\ $U \gets \{ \}$ \Comment{$\mathcal{O}(1)$}
+			\State\ $L \gets \Call{SortDescending}{L\ \text{by}\ w}$ \Comment{$\mathcal{O}(|L| \log{|L|})$}
+			\ForAll{$l \in L$} \Comment{$\mathcal{O}(|L|)$}
+				\If{\Call{IsMatching}{$U \cup \{ l \}, R, E$}} \Comment{$\mathcal{O}(|L| \cdot x)$}
+					\State\ $U \gets U \cup \{ l \}$ \Comment{$\mathcal{O}(|L| \cdot 1)$}
+				\EndIf\
+			\EndFor\
+			\State\ \Return{$U$}
+		\EndFunction\
+		\Statex\
+		\Function{IsMatching}{$L, R, E$}
+			\If{$|L| = 0$}
+				\State \Return{true}
+			\EndIf\
+
+			\State\ $l \gets \Call{FirstElement}{L}$ \Comment{$\mathcal{O}(1)$}
+			\ForAll{$r \in R$} \Comment{$\mathcal{O}(|R|)$}
+				\If{$\{ l, r \} \in E \land \Call{IsMatching}{L \backslash \{l\}, R \backslash \{r\}, E}$} \Comment{$\mathcal{O}(|R|!)$}
+					\State\ \Return{true}
+				\EndIf\
+			\EndFor\
+
+			\State\ \Return{false}
+		\EndFunction\
+	\end{algorithmic}
+\end{algorithm}
+
+Nicht effizient.
+
+\section{Aufgabe 10}
+\label{sec:Aufgabe 10}
+
+\begin{align*}
+	M &:= (E = J, U) \\
+	U &:= \{ \, B \subseteq E\ |\ \exists \, \text{Bijektion}\, \pi: B \to \{ 1, \dots, |B| \}: \, \forall j \in B: \, \pi(j) \le d_{j} \, \} \\
+	p(B) &:= \sum_{j \in B} p_{j},\ \forall B \in U
+	\intertext{Gesucht ist ein $B \in U$ mit maximalem $p(B)$, da alle Jobs in $B$ rechtzeitig geschafft werden und somit keine Strafe verursachen. Das Maximieren der nicht anfallenden Strafe minimiert somit die anfallende Strafe. Als Gewichtsfunktion kann also $w(j) := p_j, \forall j \in E$ verwendet werden.}
+	\intertext{\emph{z. z.} $M$ ist Matroid:}
+	\shortintertext{\mathbb{\circled{1}} $\emptyset \in U$. Per Definition von $U$ wahr.}
+	\shortintertext{\mathbb{\circled{2}} $\forall \, A \subseteq B \in U:}
+	\pi_{B} &:= \text{Eine, gemäß Definition aus $U$, zu $B$ passende Bijektion.} \\
+	\pi_{A} &:= \pi_{B} \, \backslash \, \{ \, (j, \pi_{B}(j))\ |\ j \in B \, \backslash \, A \, \} \\
+	&\text{Da $\pi_{A} \subseteq \pi_{B}$: $\forall j \in A: \, \pi_{A}(j) = \pi_{B}(j) \le d_{j} $} \\
+	\implies & A \in U
+	\shortintertext{\mathbb{\circled{3}} Austauscheigenschaft: $\forall A, B \in U, |A| < |B|$:}
+	\pi_{A} &:= \text{Eine, gemäß Definition aus $U$, zu $A$ passende Bijektion.} \\
+	\pi_{B} &:= \text{Eine, gemäß Definition aus $U$, zu $B$ passende Bijektion.} \\
+	pos_{BA} &:= \pi_{A} \circ \pi_{B}^{-1} \\
+	f(i) &:= \begin{cases}
+		\pi_{B}^{-1}(i): & \pi_{B}^{-1}(i) \notin A \\
+		f(pos_{BA}(i)): & sonst
+	\end{cases} \\
+	x &:= f(|A| + 1) \\
+	C &:= A \cup \{ x \} \\
+	\intertext{$f(|A| + 1)$ findet gemäß dem Schubfachprinzip immer ein $x$ aus $B \backslash A$, da die ersten $|A| + 1$ Elemente von $B$ probiert werden.}
+	g(\pi, i) &:= \begin{cases}
+		\pi \cup \{ (\pi_{B}^{-1}(i), i) \}: & \pi_{B}^{-1}(i) \notin A  \\
+		g(\pi \cup \{ (\pi_{B}^{-1}(i),\ i) \}\ \backslash\ \{ (\pi_{B}^{-1}(i),\ pos_{BA}(i)) \},\ pos_{BA}(i)): & sonst
+	\end{cases} \\
+	\pi_{C} &:= g(\pi_{A}, |A| + 1)
+	\intertext{$g$ erweitert $\pi_{A}$ so, dass $x$ an der Stelle $\pi_{B}(x)$ einsortiert wird. Wenn dort in $\pi_{A}$ bereits ein anderes Element $y$ liegt, wird $y$ nach $\pi_{B}(y)$ geschoben. Sollte dort wiederum ein Element liegen wird es nach dem selben Prinzip weitergeschoben. \\ Gemäß Konstruktion wird $x$ dabei so gewählt, dass $\forall\ \text{geschobenen}\ y: \pi_{B}(y) \le |A| + 1$. Das Schieben findet zwangsläufig ein Ende, sobald ein Element aus $A$ nach $|A| + 1$ geschoben wird, da $\pi_{A}$ dort nichts einsortiert haben kann und somit nichts geschoben werden muss. \\ Da alle Zuordnungen von $\pi_{C}$ entweder aus $\pi_{A}$ oder $\pi_{B}$ stammen, ist $\pi_{C}$ eine Sortierung von $C$, die keine Strafe verursacht.}
+	\implies & C \in U
+\end{align*}
+\qed\
+
+\end{document}
