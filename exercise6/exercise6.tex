@@ -1,0 +1,75 @@
+\input{../head.tex}
+
+\begin{document}
+
+\title{HA 6}
+\date{26. Mai 2016}
+
+\maketitle
+
+\section*{Aufgabe 9}
+\label{sec:Aufgabe 9}
+
+\subsection{Rekursive Definition}
+\label{sub:Rekursive Definition}
+
+\begin{align*}
+	\tau(i, j) := &\ \mathbb{N}_{0} \cap \begin{cases}
+		[i, j] & \textbf{if } i \le j \\
+		[0, n - 1]\, \backslash\, ]j, i[ & \textbf{if } i > j
+	\end{cases} \\
+	t[i, j] := &\ \begin{cases}
+		0 \hfill \textbf{if } \min \{ \, q\ |\ j \equiv i + q \text{ mod } n \, \} \le 1 \\
+		\min \{ \, t[i, k] + \Delta(i, k, j) + t[k, j]\ |\ k \in \tau((i + 1 \text{ mod } n), (j - 1 \text{ mod } n))\, \} \quad \textbf{else}
+	\end{cases}
+\end{align*}
+
+\subsection{Algorithmus}
+\label{sub:Algorithmus}
+
+\begin{algorithm}
+	\caption{Minimales Gewicht Triangulierung}
+
+	\begin{algorithmic}[1]
+		\Function{MinimalesGewichtTriangulierung}{$\langle v_0, \dots, v_{n - 1} \rangle$}
+			\If{$n \le 2$}
+				\Return{$0$} \Comment{$\mathcal{O}(1)$}
+			\EndIf{}
+			\Statex\
+			\For{$i \gets 0 \ato n - 1$}  \Comment{$\mathcal{O}(n)$}
+				\State\ $t[i, (i + 1 \text{ mod } n)] \gets 0$
+			\EndFor{}
+			\Statex\
+			\For{$l \gets 2 \ato n - 1$} \Comment{$\mathcal{O}(n)$}
+				\For{$i \gets 0 \ato \begin{cases}
+					\textbf{if } l \neq n - 1 \text{:} & n - 1 \\
+					\textbf{else}\text{:} & 0
+				\end{cases}$} \Comment{$\mathcal{O}(n) \cdot \mathcal{O}(n) = \mathcal{O}(n^2)$}
+					\State\ $m \gets \infty$
+					\State\ $j \gets i + l \mod n$
+					\For{$d \gets 1 \ato l - 1 $} \Comment{$\mathcal{O}(n^2) \cdot \mathcal{O}(n) = \mathcal{O}(n^3)$}
+						\State\ $k \gets i + d \mod n$
+						\State\ $m_0 \gets t[i, k] + |v_i v_k| + |v_k v_j| + |v_j v_i| + t[k, j]$
+						\If{$m_0 < m$}
+							$m \gets m_0$
+						\EndIf{}
+					\EndFor{}
+					\State\ $t[i, j] \gets m$
+				\EndFor{}
+			\EndFor{}
+			\Statex\
+			\State\ \Return{$t[0, n - 1]$}
+		\EndFunction{}
+	\end{algorithmic}
+\end{algorithm}
+
+\subsection{Laufzeit}
+\label{sub:Laufzeit}
+
+Der Algorithmus besteht im Wesentlichen aus drei verschachtelten Schleifen, die alle bis zu $n$ mal ausgeführt werden. Die Operationen in den Schleifen benötigen alle nur konstante Zeit. Insgesamt ergibt sich also eine Laufzeit von $\mathcal{O}(n^3)$.
+
+\section*{Aufgabe 10}
+\label{sec:Aufgabe 10}
+
+
+\end{document}
