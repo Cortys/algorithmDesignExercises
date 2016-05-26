@@ -143,15 +143,13 @@ Wegen Zeile 7 ergibt sich also insgesamt $\mathcal{O}(\max D \cdot \max L) = \ma
 
 \begin{align*}
 	\pi_i := &\ j, \text{sodass } \sigma_i = \nu_j \\
-	p[i, s, r] := &\ \begin{cases}
-		d(\nu_s, \nu_r) \cdot D & \textbf{if } i > t \\
-		\min \{ p[i + 1, s, r] + d(\nu_s, \sigma_i), & \textbf{else} \\
-		\qquad\, p[i + 1, \pi_i, r] + d(\nu_s, \sigma_i) \cdot D, \\
-		\qquad\, p[i + 1, s, \pi_i] + d(\sigma_i, \nu_r) \cdot D \}
+	p[i, s] := &\ \begin{cases}
+		0 & \textbf{if } i > t \\
+		\min \{ \, d(\nu_s, \sigma_i) + p[i + 1, s],\ D \cdot d(\nu_s, \sigma_i) + p[i + 1, \pi_i] \, \} & \textbf{else}
 	\end{cases}
 \end{align*}
 
-Optimale Lösung ($\hat{=}$ minimale Kosten) ist $\min \{ \, p[1, 1, r]\ |\ r \in \{ 1, \dots, n \} \, \}$.
+Optimale Lösung ($\hat{=}$ minimale Kosten) ist $p[1, 1]$.
 
 \subsection{Algorithmus}
 \label{sub:Algorithmus}
@@ -161,9 +159,7 @@ Optimale Lösung ($\hat{=}$ minimale Kosten) ist $\min \{ \, p[1, 1, r]\ |\ r \i
 	\begin{algorithmic}[1]
 		\Function{PageMigration}{$\langle \nu_1, \dots, \nu_n \rangle, \langle \sigma_1, \dots, \sigma_t \rangle, D, d$}
 			\For{$s \gets 1 \ato n$} \Comment{$\mathcal{O}(n)$}
-				\For{$r \gets 1 \ato n$} \Comment{$\mathcal{O}(n^2)$}
-					\State{$p[t + 1, s, r] \gets d(\nu_s, \nu_r) \cdot D$} \Comment{$\mathcal{O}(n^2 \cdot 1)$}
-				\EndFor\
+				\State{$p[t + 1, s] \gets 0$}
 			\EndFor\
 			\Statex\
 			\For{$i \gets t \ato 1$} \Comment{$\mathcal{O}(t)$}
@@ -173,24 +169,15 @@ Optimale Lösung ($\hat{=}$ minimale Kosten) ist $\min \{ \, p[1, 1, r]\ |\ r \i
 						\State{\textbf{break}}
 					\EndIf\
 				\EndFor\
+				\Statex\
 				\For{$s \gets 1 \ato n$} \Comment{$\mathcal{O}(t\cdot n)$}
-					\For{$r \gets 1 \ato n$} \Comment{$\mathcal{O}(t \cdot n^2)$}
-						\State{$p_0 \gets p[i + 1, s, r] + d(\nu_s, \sigma_i)$}
-						\State{$p_1 \gets p[i + 1, \pi_i, r] + d(\nu_s, \sigma_i) \cdot D$}
-						\State{$p_2 \gets p[i + 1, s, \pi_i] + d(\sigma_i, \nu_r) \cdot D$}
-						\State{$p[i, s, r] \gets \min \{ p_0, p_1, p_2 \}$} \Comment{$\mathcal{O}(t \cdot n^2 \cdot 1)$}
-					\EndFor\
+					\State{$p_0 \gets  d(\nu_s, \sigma_i) + p[i + 1, s]$}
+					\State{$p_1 \gets D \cdot d(\nu_s, \sigma_i) + p[i + 1, \pi_i]$}
+					\State{$p[i, s] \gets \min \{ p_0, p_1 \}$} \Comment{$\mathcal{O}(t \cdot n \cdot 1)$}
 				\EndFor\
 			\EndFor\
 			\Statex\
-			\State{$m \gets \infty$}
-			\For{$r \gets 1 \ato n$} \Comment{$\mathcal{O}(n)$}
-				\If{$p[1, 1, r] < m$}
-					$m \gets p[1, 1, r]$
-				\EndIf\
-			\EndFor\
-			\Statex\
-			\State{\Return{$m$}}
+			\State{\Return{$p[1, 1]$}}
 		\EndFunction{}
 	\end{algorithmic}
 \end{algorithm}
@@ -198,6 +185,6 @@ Optimale Lösung ($\hat{=}$ minimale Kosten) ist $\min \{ \, p[1, 1, r]\ |\ r \i
 \subsection{Laufzeit}
 \label{sub:Laufzeit}
 
-Der Algorithmus besteht im Wesentlichen aus drei verschachtelten Schleifen, die jeweils $t$, $n$ und $n$ mal ausgeführt werden. Die Operationen in den Schleifen benötigen alle nur konstante Zeit. Insgesamt ergibt sich also eine Laufzeit von $\mathcal{O}(t \cdot n^2)$.
+Der Algorithmus besteht im Wesentlichen aus zwei verschachtelten Schleifen, die jeweils $t$ bzw. $n$ mal ausgeführt werden. Die Operationen in den Schleifen benötigen alle nur konstante Zeit. Insgesamt ergibt sich also eine Laufzeit von $\mathcal{O}(t \cdot n)$.
 
 \end{document}
