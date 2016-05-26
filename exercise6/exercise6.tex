@@ -37,28 +37,28 @@
 			\EndIf{}
 			\Statex\
 			\For{$i \gets 0 \ato n - 1$}  \Comment{$\mathcal{O}(n)$}
-				\State\ $t[i, (i + 1 \text{ mod } n)] \gets 0$
-			\EndFor{}
+				\State{$t[i, (i + 1 \text{ mod } n)] \gets 0$}
+			\EndFor\
 			\Statex\
 			\For{$l \gets 2 \ato n - 1$} \Comment{$\mathcal{O}(n)$}
 				\For{$i \gets 0 \ato \begin{cases}
 					\textbf{if } l \neq n - 1 \text{:} & n - 1 \\
 					\textbf{else}\text{:} & 0
 				\end{cases}$} \Comment{$\mathcal{O}(n) \cdot \mathcal{O}(n) = \mathcal{O}(n^2)$}
-					\State\ $m \gets \infty$
-					\State\ $j \gets i + l \mod n$
+					\State{$m \gets \infty$}
+					\State{$j \gets i + l \mod n$}
 					\For{$d \gets 1 \ato l - 1 $} \Comment{$\mathcal{O}(n^2) \cdot \mathcal{O}(n) = \mathcal{O}(n^3)$}
-						\State\ $k \gets i + d \mod n$
-						\State\ $m_0 \gets t[i, k] + |v_i v_k| + |v_k v_j| + |v_j v_i| + t[k, j]$
+						\State{$k \gets i + d \mod n$}
+						\State{$m_0 \gets t[i, k] + |v_i v_k| + |v_k v_j| + |v_j v_i| + t[k, j]$}
 						\If{$m_0 < m$}
 							$m \gets m_0$
-						\EndIf{}
-					\EndFor{}
-					\State\ $t[i, j] \gets m$
-				\EndFor{}
-			\EndFor{}
+						\EndIf\
+					\EndFor\
+					\State{$t[i, j] \gets m$}
+				\EndFor\
+			\EndFor\
 			\Statex\
-			\State\ \Return{$t[0, n - 1]$}
+			\State{\Return{$t[0, n - 1]$}}
 		\EndFunction{}
 	\end{algorithmic}
 \end{algorithm}
@@ -71,5 +71,66 @@ Der Algorithmus besteht im Wesentlichen aus drei verschachtelten Schleifen, die 
 \section*{Aufgabe 10}
 \label{sec:Aufgabe 10}
 
+\setcounter{subsection}{0}
+
+\subsection{Rekursive Definition}
+\label{sub:Rekursive Definition}
+
+\begin{align*}
+	D := &\ \{ d_1, \dots, d_n \} \\
+	t[i, j] := &\ \begin{cases}
+		0 & \textbf{if } i > \max D \\
+		t[i + 1, \max \{ j - 1, 0 \}] & \textbf{if } i \le \max D \land (j > 0 \lor i \notin D) \\
+		\min \{ \, c_{r} + t[i + 1, \ell_{r} - 1]\ |\ r \in \{ 1, \dots, k \} \, \} & \textbf{else}
+	\end{cases}
+\end{align*}
+
+Optimale Lösung (minimale Gesamtausgaben) in $t[0, 0]$.
+
+\subsection{Algorithmus}
+\label{sub:Algorithmus}
+
+\begin{algorithm}
+	\caption{Parkschein Problem}
+	\begin{algorithmic}[1]
+		\Require{$D = \{ d_1, \dots, d_n \}$}
+		\Require{$L = \{ \ell_1, \dots, \ell_k \}$}
+		\Require{$C = \{ c_1, \dots, c_k \}$}
+		\Statex\
+		\Function{Parkschein}{$D, L, C$}
+			\State{$m_d \gets \max D$} \Comment{$\mathcal{O}(|D|) = \mathcal{O}(n)$}
+			\State{$m_\ell \gets \max L$} \Comment{$\mathcal{O}(|L|) = \mathcal{O}(k)$}
+			\Statex\
+			\For{$j \gets 0 \ato m_\ell - 1$} \Comment{$\mathcal{O}(m_\ell)$}
+				\State{$t[m_d + 1, j] \gets 0$}
+			\EndFor\
+			\For{$i \gets m_d \ato 0$} \Comment{$\mathcal{O}(m_d)$}
+				\For{$j \gets 1 \ato m_\ell - 1$} \Comment{$\mathcal{O}(m_d \cdot m_l)$}
+					\State{$t[i, j] \gets t[i + 1, j - 1]$}
+				\EndFor\
+				\If{$i \in D$} \Comment{$\mathcal{O}(m_d \cdot 1)$ mit $D$ als Hashset}
+					\State{$m \gets \infty$}
+					\For{$r \gets 1 \ato k$} \Comment{$\mathcal{O}(m_d \cdot k)$}
+						\State{$m_0 \gets c_r + t[i + 1, \ell_r - 1]$}
+						\If{$m_0 < m$}
+							$m \gets m_0$
+						\EndIf\
+					\EndFor\
+					\State{$t[i, 0] \gets m$}
+				\Else\
+					\State{$t[i, 0] \gets t[i + 1, 0]$}
+				\EndIf\
+			\EndFor\
+			\Statex\
+			\State{\Return{$t[0, 0]$}}
+		\EndFunction{}
+	\end{algorithmic}
+\end{algorithm}
+
+\subsection{Laufzeit}
+\label{sub:Laufzeit}
+
+Der Algorithmus ist pseudopolynomiell, da $m_d = \mathcal{O}(2^n)$ und $m_\ell = \mathcal{O}(2^k)$. \\
+Wegen Zeile 7 ergibt sich also insgesamt $\mathcal{O}(\max D \cdot \max L) = \mathcal{O}(2^{n + k})$.
 
 \end{document}
