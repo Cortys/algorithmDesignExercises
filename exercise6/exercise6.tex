@@ -142,11 +142,12 @@ Wegen Zeile 7 ergibt sich also insgesamt $\mathcal{O}(\max D \cdot \max L) = \ma
 \label{sub:Rekursive Definition}
 
 \begin{align*}
+	\pi_i := &\ j, \text{sodass } \sigma_i = \nu_j \\
 	p[i, s, r] := &\ \begin{cases}
-		d(\sigma_s, \sigma_r) \cdot D & \textbf{if } i > t \\
-		\min \{ p[i + 1, s, r] + d(\sigma_s, \sigma_i), & \textbf{else} \\
-		\qquad\, p[i + 1, i, r] + d(\sigma_s, \sigma_i) \cdot D, \\
-		\qquad\, p[i + 1, s, i] + d(\sigma_i, \sigma_r) \cdot D \}
+		d(\nu_s, \nu_r) \cdot D & \textbf{if } i > t \\
+		\min \{ p[i + 1, s, r] + d(\nu_s, \sigma_i), & \textbf{else} \\
+		\qquad\, p[i + 1, \pi_i, r] + d(\nu_s, \sigma_i) \cdot D, \\
+		\qquad\, p[i + 1, s, \pi_i] + d(\sigma_i, \nu_r) \cdot D \}
 	\end{cases}
 \end{align*}
 
@@ -161,16 +162,22 @@ Optimale Lösung ($\hat{=}$ minimale Kosten) ist $\min \{ \, p[1, 1, r]\ |\ r \i
 		\Function{PageMigration}{$\langle \nu_1, \dots, \nu_n \rangle, \langle \sigma_1, \dots, \sigma_t \rangle, D, d$}
 			\For{$s \gets 1 \ato n$} \Comment{$\mathcal{O}(n)$}
 				\For{$r \gets 1 \ato n$} \Comment{$\mathcal{O}(n^2)$}
-					\State{$p[t + 1, s, r] \gets d(\sigma_s, \sigma_r) \cdot D$} \Comment{$\mathcal{O}(n^2 \cdot 1)$}
+					\State{$p[t + 1, s, r] \gets d(\nu_s, \nu_r) \cdot D$} \Comment{$\mathcal{O}(n^2 \cdot 1)$}
 				\EndFor\
 			\EndFor\
 			\Statex\
 			\For{$i \gets t \ato 1$} \Comment{$\mathcal{O}(t)$}
+				\For{$j \gets 1 \ato n$} \Comment{$\mathcal{O}(t \cdot n)$}
+					\If{$\sigma_i = \nu_j$}
+						\State{$\pi_i \gets j$}
+						\State{\textbf{break}}
+					\EndIf\
+				\EndFor\
 				\For{$s \gets 1 \ato n$} \Comment{$\mathcal{O}(t\cdot n)$}
 					\For{$r \gets 1 \ato n$} \Comment{$\mathcal{O}(t \cdot n^2)$}
-						\State{$p_0 \gets p[i + 1, s, r] + d(\sigma_s, \sigma_i)$}
-						\State{$p_1 \gets p[i + 1, i, r] + d(\sigma_s, \sigma_i) \cdot D$}
-						\State{$p_2 \gets p[i + 1, s, i] + d(\sigma_i, \sigma_r) \cdot D$}
+						\State{$p_0 \gets p[i + 1, s, r] + d(\nu_s, \sigma_i)$}
+						\State{$p_1 \gets p[i + 1, \pi_i, r] + d(\nu_s, \sigma_i) \cdot D$}
+						\State{$p_2 \gets p[i + 1, s, \pi_i] + d(\sigma_i, \nu_r) \cdot D$}
 						\State{$p[i, s, r] \gets \min \{ p_0, p_1, p_2 \}$} \Comment{$\mathcal{O}(t \cdot n^2 \cdot 1)$}
 					\EndFor\
 				\EndFor\
