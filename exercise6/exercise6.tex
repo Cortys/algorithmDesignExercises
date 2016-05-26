@@ -28,7 +28,7 @@
 \label{sub:Algorithmus}
 
 \begin{algorithm}
-	\caption{Minimales Gewicht Triangulierung}
+	\caption{Minimales Gewicht Triangulierung Problem}
 
 	\begin{algorithmic}[1]
 		\Function{MinimalesGewichtTriangulierung}{$\langle v_0, \dots, v_{n - 1} \rangle$}
@@ -85,7 +85,7 @@ Der Algorithmus besteht im Wesentlichen aus drei verschachtelten Schleifen, die 
 	\end{cases}
 \end{align*}
 
-Optimale Lösung (minimale Gesamtausgaben) in $t[0, 0]$.
+Optimale Lösung ($\hat{=}$ minimale Gesamtausgaben) ist $t[0, 0]$.
 
 \subsection{Algorithmus}
 \label{sub:Algorithmus}
@@ -132,5 +132,65 @@ Optimale Lösung (minimale Gesamtausgaben) in $t[0, 0]$.
 
 Der Algorithmus ist pseudopolynomiell, da $m_d = \mathcal{O}(2^n)$ und $m_\ell = \mathcal{O}(2^k)$. \\
 Wegen Zeile 7 ergibt sich also insgesamt $\mathcal{O}(\max D \cdot \max L) = \mathcal{O}(2^{n + k})$.
+
+\section*{Aufgabe 11}
+\label{sec:Aufgabe 11}
+
+\setcounter{subsection}{0}
+
+\subsection{Rekursive Definition}
+\label{sub:Rekursive Definition}
+
+\begin{align*}
+	p[i, s, r] := &\ \begin{cases}
+		d(\sigma_s, \sigma_r) \cdot D & \textbf{if } i > t \\
+		\min \{ p[i + 1, s, r] + d(\sigma_s, \sigma_i), & \textbf{else} \\
+		\qquad\, p[i + 1, i, r] + d(\sigma_s, \sigma_i) \cdot D, \\
+		\qquad\, p[i + 1, s, i] + d(\sigma_i, \sigma_r) \cdot D \}
+	\end{cases}
+\end{align*}
+
+Optimale Lösung ($\hat{=}$ minimale Kosten) ist $\min \{ \, p[1, 1, r]\ |\ r \in \{ 1, \dots, n \} \, \}$.
+
+\subsection{Algorithmus}
+\label{sub:Algorithmus}
+
+\begin{algorithm}
+	\caption{Page Migration Problem}
+	\begin{algorithmic}[1]
+		\Function{PageMigration}{$\langle \nu_1, \dots, \nu_n \rangle, \langle \sigma_1, \dots, \sigma_t \rangle, D, d$}
+			\For{$s \gets 1 \ato n$} \Comment{$\mathcal{O}(n)$}
+				\For{$r \gets 1 \ato n$} \Comment{$\mathcal{O}(n^2)$}
+					\State{$p[t + 1, s, r] \gets d(\sigma_s, \sigma_r) \cdot D$} \Comment{$\mathcal{O}(n^2 \cdot 1)$}
+				\EndFor\
+			\EndFor\
+			\Statex\
+			\For{$i \gets t \ato 1$} \Comment{$\mathcal{O}(t)$}
+				\For{$s \gets 1 \ato n$} \Comment{$\mathcal{O}(t\cdot n)$}
+					\For{$r \gets 1 \ato n$} \Comment{$\mathcal{O}(t \cdot n^2)$}
+						\State{$p_0 \gets p[i + 1, s, r] + d(\sigma_s, \sigma_i)$}
+						\State{$p_1 \gets p[i + 1, i, r] + d(\sigma_s, \sigma_i) \cdot D$}
+						\State{$p_2 \gets p[i + 1, s, i] + d(\sigma_i, \sigma_r) \cdot D$}
+						\State{$p[i, s, r] \gets \min \{ p_0, p_1, p_2 \}$} \Comment{$\mathcal{O}(t \cdot n^2 \cdot 1)$}
+					\EndFor\
+				\EndFor\
+			\EndFor\
+			\Statex\
+			\State{$m \gets \infty$}
+			\For{$r \gets 1 \ato n$} \Comment{$\mathcal{O}(n)$}
+				\If{$p[1, 1, r] < m$}
+					$m \gets p[1, 1, r]$
+				\EndIf\
+			\EndFor\
+			\Statex\
+			\State{\Return{o}}
+		\EndFunction{}
+	\end{algorithmic}
+\end{algorithm}
+
+\subsection{Laufzeit}
+\label{sub:Laufzeit}
+
+Der Algorithmus besteht im Wesentlichen aus drei verschachtelten Schleifen, die jeweils $t$, $n$ und $n$ mal ausgeführt werden. Die Operationen in den Schleifen benötigen alle nur konstante Zeit. Insgesamt ergibt sich also eine Laufzeit von $\mathcal{O}(t \cdot n^2)$.
 
 \end{document}
