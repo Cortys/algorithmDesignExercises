@@ -1,0 +1,60 @@
+\input{../head.tex}
+
+\begin{document}
+
+\title{HA 7}
+\date{9. Juni 2016}
+
+\maketitle
+
+\section*{Aufgabe 15}
+\label{sec:Aufgabe 15}
+
+\subsection{Fehlerwahrscheinlichkeitsschranke}
+\label{sub:Fehlerwahrscheinlichkeitsschranke}
+
+\begin{align*}
+	A^t := \sum_{i = 1}^{t} A_i,&\ A_i \in \{ \, 0, 1 \, \} \\
+	\Pr (A_i = 0\ |\ x \in L) \le \frac{1}{3},&\ \Pr (A_i = 1\ |\ x \notin L) \le \frac{1}{3}
+\end{align*}
+
+\begin{align*}
+	\shortintertext{Fehlerwahrscheinlichkeit $\alpha_1$ von $A^t$ mit $x \in L$:}
+	\mathbb{E}[A_i\ |\ x \in L] &= 1 \cdot (1 - \Pr (A_i = 0\ |\ x \in L)) \ge \frac{2}{3} \\
+	\implies \mathbb{E}[A^t\ |\ x \in L] &= \mathbb{E}[A_i\ |\ x \in L] \cdot t \ge \frac{2}{3}\, t \\
+	\alpha_1 &= \Pr (A^t < \frac{t}{2}\ |\ x \in L) \\
+	&= \Pr (A^t < \mu \cdot (1 - \delta)\ |\ x \in L),\ \mu := \frac{2}{3}\, t \le \mathbb{E}[A^t\ |\ x \in L],\ \delta := \frac{1}{4} \\
+	&\underset{\text{Chernoff}}{\le} \left( \frac{e^{-\delta}}{(1 - \delta)^{1 - \delta}} \right)^{\mu}
+	= \left( \frac{e^{- \frac{1}{4}}}{\frac{3}{4}^{\frac{3}{4}}} \right)^{\frac{2}{3} \, t}
+	= \left( \frac{64}{27 \, e} \right)^{\frac{1}{6}\, t}
+	\intertext{Fehlerwahrscheinlichkeit $\alpha_2$ von $A^t$ mit $x \notin L$:}
+	\mathbb{E}[A_i\ |\ x \notin L] &= 1 \cdot \Pr (A_i = 1\ |\ x \notin L) \le \frac{1}{3} \\
+	\implies \mathbb{E}[A^t\ |\ x \notin L] &= \mathbb{E}[A_i\ |\ x \notin L] \cdot t \le \frac{1}{3}\, t \\
+	\alpha_2 &= \Pr (A^t \ge \frac{t}{2}\ |\ x \in L) \\
+	&= \Pr (A^t \ge \mu \cdot (1 + \delta)\ |\ x \in L),\ \mu := \frac{1}{3}\, t \ge \mathbb{E}[A^t\ |\ x \notin L],\ \delta := \frac{1}{2} \\
+	&\underset{\text{Chernoff}}{\le} \left( \frac{e^{\delta}}{(1 + \delta)^{1 + \delta}} \right)^{\mu}
+	= \left( \frac{e^{\frac{1}{2}}}{\frac{3}{2}^{\frac{3}{2}}} \right)^{\frac{1}{3} \, t}
+	= \left( \frac{8 \, e}{27} \right)^{\frac{1}{6}\, t}
+	\intertext{Gesamtfehlerwahrscheinlichkeit $\alpha$ von $A^t$:}
+	\alpha & \le \max \{ \alpha_1, \alpha_2 \} \le \left( \frac{64}{27 \, e} \right)^{\frac{1}{6}\, t} \text{, denn $\frac{64}{27 \, e} > \frac{8 \, e}{27}$}
+\end{align*}
+
+\subsection{Maximale Fehlerwahrscheinlichkeit n^{-1}}
+\label{Maximale Fehlerwahrscheinlichkeit n^{-1}}
+
+\begin{align*}
+	\alpha \le \left( \frac{64}{27 \, e} \right)^{\frac{1}{6}\, t} &\le \frac{1}{n} \\
+	\log \left(\frac{64}{27 \, e}\right) \cdot \frac{1}{6}\, t &\le - \log{n} \\
+	t &\ge 6 \log_{\left(\frac{27 \, e}{64}\right)}{n}
+\end{align*}
+
+\subsection{Maximale Fehlerwahrscheinlichkeit n^{-2}}
+\label{Maximale Fehlerwahrscheinlichkeit n^{-2}}
+
+\begin{align*}
+	\alpha \le \left( \frac{64}{27 \, e} \right)^{\frac{1}{6}\, t} &\le \frac{1}{n^2} \\
+	\log \left(\frac{64}{27 \, e}\right) \cdot \frac{1}{6}\, t &\le -2 \log{n} \\
+	t &\ge 12 \log_{\left(\frac{27 \, e}{64}\right)}{n}
+\end{align*}
+
+\end{document}
