@@ -1,0 +1,68 @@
+\input{../head.tex}
+
+\begin{document}
+
+\title{HA 8}
+\date{16. Juni 2016}
+
+\maketitle
+
+\section*{Aufgabe 17}
+\label{sec:Aufgabe 17}
+
+\subsection{Bedeutung und Korrektheit}
+\label{sub:Bedeutung und Korrektheit}
+
+Der Algorithmus berechnet die $k$-t kleinste Zahl von $S$. Er arbeitet korrekt, weil er im Wesentlichen ein Quicksort ist, der in jedem Rekursionsschritt nur die Teilmenge behandelt in der das $k$-te Element ist. Da im Quicksort beide rekursive Aufrufe unabhängig voneinander auf ihren jeweiligen Teilmengen der Eingabe arbeiten, wird durch das Weglassen von einem Aufruf die Sortierung im anderen Aufruf nicht verändert. Das Sortieren der Teilmengen mit dem $k$-ten Element stellt demnach am Ende die $k$-t kleinste Zahl an Stelle $k$.
+
+\subsection{Erwartete Vergleichsanzahl}
+\label{sub:Erwartete Vergleichsanzahl}
+
+\begin{align*}
+	T(1) :=&\ 0 \\
+	T(n) :=&\ \frac{1}{n} \sum_{i = 1}^{n} (T(n - i) + n - 1) \\
+	=&\ n - 1 + \frac{1}{n} \sum_{i = 1}^{n - 1} T(i)
+\end{align*}
+
+\subsection{Vergleichsschranke}
+\label{sub:Vergleichsschranke}
+
+\emph{z.\ z.} ($\dagger$) $T(n) \in \mathcal{O}(n) \Leftrightarrow \exists \, a, c \in \mathbb{R}:\ \forall \, n \in \mathbb{N}:\ T(n) \le a \cdot n + c$ \\
+sei $a := 2, c := 0$
+\begin{align*}
+	\shortintertext{\textbf{Induktionsanfang:} $n = 1$}
+	& T(n) = T(1) = 0 < 1 \\
+	\implies & T(n) < 2n \ \forall \, n \in \mathbb{N}, n \le 1 \\
+	\implies & T(n) \in \mathcal{O}(n)\ \forall \, n \in \mathbb{N}, n \le 1
+	\intertext{\textbf{Induktionsvoraussetzung:} ($\dagger$) gilt für alle $i \le n$ für ein beliebiges aber festes $n$.}
+	\shortintertext{\textbf{Induktionsschritt:} $(n - 1) \rightarrow n$}
+	& T(n) = n - 1 + \frac{1}{n} \sum_{i = 1}^{n - 1} T(i) \underset{\text{I.V.}}{<} n + \frac{1}{n} \sum_{i = 1}^{n - 1} 2 \cdot i \\
+	\implies & T(n) < n + \frac{1}{n} \cdot 2 \cdot \frac{n \cdot (n - 1)}{2} = 2n - 1 < 2n \\
+	\implies & T(n) \in \mathcal{O}(n)
+\end{align*}
+
+\section*{Aufgabe 18}
+\label{sec:Aufgabe 18}
+
+\begin{align*}
+	X_{p, s} := &\ \begin{cases}
+		1 & \text{falls Person $p$ auf Platz $s$ sitzt} \\
+		0 & \text{sonst}
+	\end{cases} \\
+	\Pr(X_{p, s} = 1) = &\ \mathbb{E}[X_{p, s}] = \frac{1}{n} \\
+	Y_s := &\ \sum_{p \in \{ 1, \dots, k \}} X_{p, s} = \text{Anzahl von Personen auf Sitz $s$} \\
+	\Pr(Y_s = 0) = &\ \left( \frac{n - 1}{n} \right)^{k} \\
+	\mathbb{E}[Y_s] = &\ \sum_{p \in \{ 1, \dots, k \}} \mathbb{E}[X_{p, s}] = \frac{k}{n} \\
+	Z_s := &\ \begin{cases}
+		Y_s & \text{falls } Y_{s - 1} = 0 \land Y_{s + 1} = 0 \\
+		0 & \text{sonst}
+	\end{cases} \\
+	\mathbb{E}[Z_s] = &\ \Pr(Y_{s - 1} = 0 \land Y_{s + 1} = 0) \cdot \mathbb{E}[Y_s\ |\ Y_{s - 1} = 0 \land Y_{s + 1} = 0] \\
+	= &\ \left( \frac{n - 1}{n} \right)^{k} \cdot \left( \frac{n - 2}{n - 1} \right)^{k} \cdot \frac{k}{n - 2} = \frac{(n - 2)^{k - 1} \cdot k}{n^k} \\
+	A := &\ \sum_{s \in \{ 1, \dots, n \}} Z_s = \text{Anzahl der Personen ohne Nachbarn} \\
+	\mathbb{E}[A] = &\ \sum_{s \in \{ 1, \dots, n \}} \mathbb{E}[Z_s]
+	= n \cdot \frac{(n - 2)^{k - 1} \cdot k}{n^k} = \left( \frac{n - 2}{n} \right)^{k - 1} \cdot k
+\end{align*} \\
+Der Erwartungswert für die Anzahl der Personen, die keinen direkten Tischnachbarn haben, ist $\left( \frac{n - 2}{n} \right)^{k - 1} k$.
+
+\end{document}
