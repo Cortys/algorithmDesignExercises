@@ -1,0 +1,61 @@
+\input{../head.tex}
+
+\begin{document}
+
+\title{HA 9}
+\date{23. Juni 2016}
+
+\maketitle
+
+\section*{Aufgabe 19}
+\label{sec:Aufgabe 19}
+
+\subsection{Korrektheit}
+\label{sub:Korrektheit}
+
+\begin{itemize}
+	\item \textbf{Invariante:} $\frac{1}{2} \sum_{v \in A} d(v,\, A \, \cup \, B) \le \sum_{v \in A} d(v, B)\ \land\ \frac{1}{2} \sum_{v \in B} d(v,\, A\, \cup \, B) \le \sum_{v \in B} d(v, A)$
+	\item \textbf{Initialisierung:}
+		\begin{align*}
+			&A = \{ v_1 \},\ B = \{ v_2 \} \\
+			\implies &d(v_1,\, A\, \cup \, B) = d(v_1,\, B),\ d(v_2,\, A\, \cup \, B) = d(v_2,\, A) \\
+			\implies & \frac{d(v_1,\, A\, \cup \, B)}{2} \le d(v_1, B)\ \land\ \frac{d(v_2,\, A\, \cup \, B)}{2} \le d(v_2, A)
+		\end{align*}
+	\item \textbf{Erhaltung:}
+		\begin{itemize}
+			\item \textbf{Falls $d(v, A) > d(v, B)$:}
+				\begin{align*}
+					\implies & B' = B \, \cup \, \{ v \} \\
+					\implies & \forall\, v_0 \in V: d(v_0,\, A \, \cup \, B') = d(v_0,\, A \, \cup \, B \, \cup \, \{ v \})
+					\shortintertext{Erster Teil der Invariante:}
+					\implies & \forall\, v_0 \in A: d(v_0,\, A \, \cup \, B') - d(v_0,\, A \, \cup \, B) = d(v_0,\, B') - d(v_0,\, B) \\
+					\implies & \forall\, v_0 \in A: \frac{d(v_0,\, A \, \cup \, B')}{2} \le d(v_0, B') \\
+					\implies & \frac{1}{2} \sum_{v_0 \in A} d(v_0,\, A \, \cup \, B') \le \sum_{v_0 \in A} d(v_0, B')
+					\shortintertext{Zweiter Teil der Invariante:}
+					\implies & d(v,\, A \, \cup \, B') = d(v,\, A) + d(v,\, B) \le 2 \cdot d(v,\, A) \\
+					\implies & \frac{d(v,\, A\, \cup \, B')}{2} \le d(v, A) \\
+					\implies & \frac{1}{2} \sum_{v_0 \in B'} d(v_0,\, A \, \cup \, B') \le d(v, A) + \frac{1}{2} \sum_{v_0 \in B} d(v_0,\, A \, \cup \, B') \\
+					\shortintertext{Angenommen $\frac{1}{2} \sum_{v_0 \in B} d(v_0,\, A \, \cup \, B') > \sum_{v_0 \in B} d(v_0, A)$:}
+					& \frac{1}{2} \sum_{v_0 \in B} d(v_0,\, A \, \cup \, B') = \frac{1}{2} \sum_{v_0 \in B} d(v_0,\, A \, \cup \, B) + \frac{1}{2} \sum_{v_0 \in B} d(v_0,\, \{ v \}) \\
+					\implies & \frac{1}{2} \sum_{v_0 \in B} d(v_0,\, \{ v \}) > \frac{1}{2} \sum_{v_0 \in B} d(v_0,\, A) - \sum_{v_0 \in B} d(v_0, A \, \cup \, B) \\
+					\implies & \sum_{v_0 \in B} d(v_0,\, \{ v \}) > \sum_{v_0 \in B} d(v_0,\, A) - d(v_0,\, B) \\
+					\implies & d(v, A) > d(v, B) > \sum_{v_0 \in B} d(v_0,\, A) - d(v_0,\, B) \\
+					\implies & ?
+				\end{align*}
+			\item \textbf{Sonst:} Analog zum ersten Fall mit $A$ und $B$ vertauscht.
+		\end{itemize}
+	\item \textbf{Terminierung:}
+		\begin{align*}
+			& A \, \cup \, B = V \\
+			\implies & d(v, A \, \cup \, B) = deg(v) \\
+			\implies & \frac{1}{2} \sum_{v \in A} deg(v) \le \sum_{v \in A} d(v, B) \land \frac{1}{2} \sum_{v \in B} deg(v) \le \sum_{v \in B} d(v, A) \\
+			\implies & \frac{1}{2} |E| \le \sum_{v \in A} d(v, B) = \sum_{v \in B} d(v, A) \le optSplit(G) \le |E|
+		\end{align*}
+\end{itemize}
+
+\subsection{Laufzeit}
+\label{sub:Laufzeit}
+
+$\mathcal{O}(|V|^2)$, da die for-Schleife $\mathcal{O}(|V|)$ mal und die darin geschachtelten $d(v, X)$-Aufrufe in $\mathcal{O}(|A|) = \mathcal{O}(|V|)$ bzw. $\mathcal{O}(|B|) = \mathcal{O}(|V|)$ sind, da $\forall x \in X:\, \{ v, x \} \in E$ geprüft werden muss.
+
+\end{document}
