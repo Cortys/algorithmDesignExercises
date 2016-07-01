@@ -1,0 +1,75 @@
+\input{../head.tex}
+
+\begin{document}
+
+\title{HA 10}
+\date{30. Juni 2016}
+
+\maketitle
+
+\section*{Aufgabe 21}
+\label{sec:Aufgabe 21}
+
+\subsection{Algorithmus}
+\label{sub:Algorithmus}
+
+\begin{align*}
+	in_G(v) :=&\ \{ (v_1, v_{2}) \in E\, |\, v_2 = v  \} \text{ mit $G = (V, E)$} \\
+	out_G(v) :=&\ \{ (v_1, v_{2}) \in E\, |\, v_1 = v  \} \text{ mit $G = (V, E)$},\ & w_G(v) := &\ \frac{|in_G(v)|}{|out_G(v)|} \\
+	ind(V, E) :=&\ (V,\ \{ e \in E \cap V^{2} \})
+\end{align*}
+
+\begin{algorithm}
+	\caption{Maximaler azyklischer Teilgraph Approximation}
+	\begin{algorithmic}[1]
+		\Function{dag}{$G$}
+			\State{$(V, E) \gets G$}
+			\If{$|V| = 0$}
+				\Return{$\emptyset$}
+			\EndIf\
+			\Statex\
+			\State{$s \gets null$}
+			\For{$v \in V$}
+				\If{$s = null \lor w_G(v) < w_G(s)$}
+					$s \gets v$
+				\EndIf\
+			\EndFor\
+			\State{\Return{$out_G(s) \cup \Call{dag}{ind(V \backslash \{ s \}, E)}$}}
+		\EndFunction\
+	\end{algorithmic}
+\end{algorithm}
+
+\subsection{Korrektheit und Laufzeit}
+\label{sub:Korrektheit und Laufzeit}
+
+Die Funktionen $in_G$, $out_G$ und $w_G$ lassen sich alle in $\mathcal{O}(|V|)$ berechnen, da jeder Knoten höchstens $|V| - 1$ Nachbarn haben kann. \\
+Die Zeilen 1 – 4 sind in $\mathcal{O}(1)$ ausführbar. \\
+Die Zeilen 5 – 6 benötigen $\mathcal{O}(|V|^2)$, da $2 |V|$-mal $w_G$ aufgerufen wird. \\
+Zeile 7 benötigt $\mathcal{O}(|V| + |V|^3) = \mathcal{O}(|V|^3)$, da es genau $|V| - 1$ rekursive Aufrufe von $dag$ gibt, die wegen den Zeilen 5 – 6 jeweils $\mathcal{O}(|V|^2)$ benötigen.
+\\ \\
+Insgesamt hat $dag$ also eine Zeitkomplexität von $\mathcal{O}(|V|^3)$.
+\\ \\
+$dag(G)$ berechnet die Kantenmenge eines DAGs von $G$. \\
+Denn $\forall i \in \{ 1, \dots, n \}: \forall (s_i, s_j) \in dag(G): i < j$, wobei $s_1$ das im ersten / direkten Aufruf von $dag$ und $s_n$ das im letzten rekursiven Aufruf selektierte $s$ ist. Es gibt also eine topologische Sortierung von $(V, dag(G))$.
+
+\subsection{Approximationsfaktor}
+\label{sub:Approximationsfaktor}
+
+\begin{align*}
+	&\frac{\sum_{v \in V} |in_G(v)|}{\sum_{v \in V} |out_G(v)|} = 1 \\
+	\implies &\exists v \in V: w_G(v) \le 1 \\
+	&\text{Seien } s_1, \dots, s_n \text{ definiert, wie in Aufgabenteil b.} \\
+	&\text{Seien } G_1, \dots, G_n \text{ die nach $dag$ übergebenen Graphen, mit $G_1 = G$ und $G_n = (\{ s_n \}, \emptyset)$.} \\
+	\implies &\forall i \in \{ 1, \dots, n \}: w_{G_i}(s_i) \le 1 \land in_{G_i}(s_i) = in_G(s_i) \backslash (\cup_{j \in \{ 1, \dots, i-1 \}} out_{G_j}(s_j)) \\
+	\implies &\forall i \in \{ 1, \dots, n \}: |out_{G_i}(s_i)| \ge |in_{G_i}(s_i)| \\
+	\implies &\forall i \in \{ 1, \dots, n \} \land |out_{G_i}(s_i)| \ge |in_G(s_i)|: \text{min. die Hälfte der Kanten von $s_i$ in $deg(G)$.} \\
+	\implies &\forall i \in \{ 1, \dots, n \} \land |out_{G_i}(s_i)| < |in_G(s_i)|: in_G(s_i) \backslash in_{G_i}(s_i) \text{ sind bereits in $deg(G)$.} \\
+	\implies &\forall i \in \{ 1, \dots, n \} \land |out_{G_i}(s_i)| < |in_G(s_i)|: |out_{G_i}(s_i) \cup in_G(s_i) \backslash in_{G_i}(s_i)| \ge |in_G(s_i)| \\
+	\implies &\forall i \in \{ 1, \dots, n \} \land |out_{G_i}(s_i)| < |in_G(s_i)|: \text{min. die Hälfte der Kanten von $s_i$ in $deg(G)$.} \\
+	\implies &\forall i \in \{ 1, \dots, n \}: \text{min. die Hälfte der Kanten von $s_i$ in $deg(G)$.} \\
+	\implies &\text{Da $\{ s_1, \dots, s_n \} = V$, ist mindestens die Hälfte der Kanten von $G$ in $deg(G)$.} \\
+	\implies &\text{Da $|E| \ge |optDag(G)| \ge |dag(G)| \ge \frac{1}{2} |E|$, hat $dag$ eine Güte von $\frac{1}{2}$.}
+\end{align*}
+\qed
+
+\end{document}
