@@ -1,0 +1,74 @@
+\input{../head.tex}
+
+\begin{document}
+
+\title{HA 11}
+\date{7. Juli 2016}
+
+\maketitle
+
+\section*{Aufgabe 23}
+\label{sec:Aufgabe 23}
+
+\subsection{ILP}
+\label{sub:ILP}
+
+\begin{align*}
+	\textbf{minimiere } & c \cdot x \text{ für gegebenes $c = (c_1\ \cdots\ c_m)$} \\
+	\textbf{s. t. } & A \cdot x \ge {\underbrace{(1\ \cdots\ 1)}_{m \text{-mal}}}^T,\ x \in \{ 0, 1 \}^m \\
+	& A := \begin{pmatrix}
+		a_{1 1} & \cdots & a_{1 m} \\
+		\vdots & \ddots & \vdots \\
+		a_{n 1} & \cdots & a_{n m}
+	\end{pmatrix},\ a_{ij} := \begin{cases}
+		1 & \textbf{falls } e_i \in S_j \\
+		0 & \textbf{sonst}
+	\end{cases}
+\end{align*}
+Minimale Lösungen aus $\{ 0, 1 \}^m$ sind identisch zu minimalen Lösungen aus $\mathbb{N}_0^m$, da letztere an keiner Stelle $x_i$ kleiner als erstere sein können und $\forall\, x_i > 1$ auch $x_i = 1$ eine valide Lösung ist, womit $x \notin \{ 0, 1 \}^m$ dann also nicht minimal wäre. $\implies$ obiges 0-1-LP $\equiv$ ILP.
+
+\subsection{Approximationsalgorithmus}
+\label{sub:Approximationsalgorithmus}
+
+\begin{enumerate}
+	\item Löse LP aus \circled{a} reelwertig. Lösung $x' = (x'_1\ \cdots\ x'_m)^T \in \mathbb{R}_{\ge 0}^m$
+	\item Berechne Lösung $x := (x_1\ \cdots\ x_m)^T \in \{ 0, 1 \}^m,\ x_i := \begin{cases}
+		1 & \textbf{falls } x'_i \ge \frac{1}{f} \\
+		0 & \textbf{sonst}
+	\end{cases}$
+\end{enumerate}
+
+\textbf{Korrektheit:}
+\begin{align*}
+	& \forall\, i \in \{ 1, \dots, n \}: \sum_{j = 1}^{m} a_{i j} \le f\ \land\ \sum_{j = 1}^{m} a_{i j} \cdot x'_{j} \ge 1 \\
+	\implies & \forall\, i \in \{ 1, \dots, n \}: \exists\, j \in \{ 1, \dots, m \}: a_{i j} = 1\ \land\ x'_j \ge \frac{1}{f} \\
+	\implies & \forall\, i \in \{ 1, \dots, n \}: \exists\, j \in \{ 1, \dots, m \}: a_{i j} = 1\ \land\ x_j = 1 \\
+	\implies & A \cdot x \ge {\underbrace{(1\ \cdots\ 1)}_{m \text{-mal}}}^T
+\end{align*}
+
+\textbf{Approximationsfaktor:}
+\begin{align*}
+	& c \cdot x_0 \ge c \cdot x',\ x_0 := \text{optimale ganzzahlige Lösung} \\
+	& \forall\, j \in \{ 1, \dots, m \}: x'_j \cdot f \ge x_j \\
+	\implies & c \cdot x_0 \cdot f \ge c \cdot x' \cdot f \ge c \cdot x \\
+	\implies & \text{$x$ ist max. $f$-mal schlechter als die optimale ganzzahlige Lösung.}
+\end{align*}
+
+\section*{Aufgabe 24}
+\label{sec:Aufgabe 24}
+
+\begin{align*}
+	A := &\ \text{online Algorithmus aus Aufgabenstellung} \\
+	O := &\ \text{optimaler Algorithums} \\
+	s := &\ \text{Eingabesequenz von Gegenständen} = (g_1, \dots, g_n) \\
+	w(g) := &\ \text{Gewicht des Gegenstands $g$} \\
+	a := &\ \text{aufsteigende Zeitpunkte zu denen $A$ Koffer öffnet} = (a_1 = 1, \dots, a_k) \in \{ 1, \dots, n \}^k \\
+	p(i) := &\ (g_\alpha, \dots, g_\beta) \text{ mit } \alpha := a_{2i - 1},\ \beta := a_{2i + 1} - 1 \\
+	\implies & \forall\, i \in \mathbb{N}: p(i) \text{ enthält für zwei sukzessive Koffer alle eingepackten Gegenstände.} \\
+	\implies & \forall\, p(i) = (g_\alpha, \dots, g_\beta), i \in \mathbb{N}: \sum_{j = \alpha}^{\beta} w(g_j) > 1 \text{, da sonst kein zweiter Koffer geöffnet würde.} \\
+	\implies & \forall\, i \in \mathbb{N}: \text{Gegenstände in $p(i)$ verursachen in $O$ das Öffnen von min. einem Koffer.} \\
+	\implies & \text{Anzahl von Koffern in $A$ ist max. doppelt so groß, wie in $O$.} \\
+	\implies & \text{$A$ ist 2-competitive.}
+\end{align*}
+
+\end{document}
