@@ -1,0 +1,49 @@
+\input{../head.tex}
+
+\begin{document}
+
+\title{HA 12}
+\date{14. Juli 2016}
+
+\maketitle
+
+\section*{Aufgabe 23}
+\label{sec:Aufgabe 23}
+
+\subsection{Algorithmus}
+\label{sub:Algorithmus}
+
+Für alle eingehenden Requests $r = (v, p)$ auf Seiten $p$ der Größe $D$ an Knoten $v \in \{ v_1, v_2 \}$:
+
+\begin{enumerate}
+	\item \begin{cases}
+		\text{Bewege $p$ zu $v$.} & \textbf{falls $p$ nicht bei $v$} \\
+		\text{NOP} & \textbf{sonst}
+	\end{cases}
+	\item Schicke $p$ von Knoten $v$ aus.
+\end{enumerate}
+
+\subsection{Competitiveness}
+\label{sub:Competitiveness}
+
+o. B. d. A. fragen alle Requests die selbe Seite $p$ der Größe $D$ an, da Requests auf unterschiedliche Seiten sich gegenseitig nicht beeinflussen.
+\begin{align*}
+	A :=&\ \text{Der in \circled{a} beschriebene online Algorithmus.} \\
+	O :=&\ \text{Ein optimaler offline Page-Migration Algorithmus.} \\
+	r :=&\ \text{Eingabesequenz von Requests} = (r_1, \dots, r_n) \text{ mit } r_i = (t_i, p) \\
+	t :=&\ (t_1, \dots, t_n) \\
+	c_X(t) :=&\ \text{Von Algorihmus $X$ produzierte Kosten bei Knoteneingabefolge $t$.} \\
+	b(i) :=&\ \min \{ j \in \{ \, b(i - 1) + 1, \dots, n \, \} \ |\ t_{j - 1} \neq t_j \}, \quad b(1) := 1 \\
+	s(i) :=&\ (t_{b(2i - 1)}, \dots, t_{b(2i + 1) - 1}) \\
+	|s|\, =&\ \text{Anzahl von Werten $i \in \mathbb{N}$ für die $s(i)$ definiert ist.}
+	\intertext{$t$ (und somit $r$) wird also in Teilsequenzen $s(1), \dots, s(|s|)$ zerlegt, die jeweils Folgen von Knoten der Form $(v_x, \dots, v_x, v_y, \dots, v_y)$ mit $x, y \in \{ 1, 2 \} \land x \neq y$ sind.}
+	\implies& \text{$c_O(s(i)) \ge d(v_1, v_2) = 1$, da entweder $v_1$ oder $v_2$ die Seite $p$ nicht haben kann.} \\
+	\land\ & \text{$c_A(s(i)) \le 2 D$, da je nach Position von $p$ beim ersten Request an $v_x$ eine oder} \\
+	& \text{ keine Page-Migration stattfindet (kostet max. $D \cdot d(v_1, v_2) = D$) und beim ersten} \\
+	& \text{ Request an $v_y$ genau eine Page-Migration stattfindet (kostet $D$).} \\
+	\implies& |s| \le c_O(t) \le c_A(t) \le |s| \cdot 2D \\
+	\implies& \text{$A$ ist $2D$-competitive.}
+\end{align*}
+\qed\
+
+\end{document}
